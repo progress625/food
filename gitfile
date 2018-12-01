@@ -1,0 +1,3 @@
+git remote add origin https://github.com/progress625/food.git
+
+git push -u origin master
