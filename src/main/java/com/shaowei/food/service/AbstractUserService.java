@@ -54,4 +54,6 @@ public interface AbstractUserService {
      * @return the persisted entity
      */
     AbstractUser save(AbstractUser abstractUser);
+    
+    Optional<AbstractUser> getCurrentAbstractUser();
 }

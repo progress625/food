@@ -6,11 +6,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.shaowei.food.domain.AbstractUser;
 import com.shaowei.food.domain.Provider;
 import com.shaowei.food.repository.ProviderRepository;
+import com.shaowei.food.security.AuthoritiesConstants;
 import com.shaowei.food.service.AbstractUserService;
 import com.shaowei.food.service.ProviderService;
 import com.shaowei.food.service.dto.ProviderDTO;
@@ -110,7 +112,32 @@ public class ProviderServiceImpl implements ProviderService {
             admin.setProvider(provider);
             abstractUserService.save(admin);
             result = providerMapper.toDto(provider);
-//            providerSearchRepository.save(provider);
+
+        }
+        return result;
+    }
+    
+    /**
+     * Create a provider.
+     *
+     * @param providerDTO the entity to save
+     * @return the persisted entity
+     */
+    @Override
+    @PreAuthorize("hasRole(\"" + AuthoritiesConstants.PROVIDER_ADMINISTRATOR + "\")")
+    public ProviderDTO create(ProviderDTO providerDTO) {
+        log.debug("Request to save Provider : {}", providerDTO);
+
+        AbstractUser admin = abstractUserService.getCurrentAbstractUser().get();
+        ProviderDTO result = null;
+        if (admin.getProvider() == null) {
+            Provider provider = providerMapper.toEntity(providerDTO);
+            provider.addUser(admin);
+            provider = providerRepository.save(provider);
+            admin.setProvider(provider);
+            abstractUserService.save(admin);
+            result = providerMapper.toDto(provider);
+
         }
         return result;
     }

@@ -1,9 +1,11 @@
 package com.shaowei.food.repository;
 
-import com.shaowei.food.domain.AbstractUser;
-import org.springframework.data.mongodb.repository.Query;
+import java.util.Optional;
+
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
+
+import com.shaowei.food.domain.AbstractUser;
 
 
 /**
@@ -12,5 +14,7 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface AbstractUserRepository extends MongoRepository<AbstractUser, String> {
+	
+	Optional<AbstractUser> findByEmail(String email);
 
 }

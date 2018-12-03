@@ -11,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,13 +21,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
-import com.shaowei.food.security.AuthoritiesConstants;
 import com.shaowei.food.service.ProviderService;
 import com.shaowei.food.service.dto.ProviderDTO;
 import com.shaowei.food.web.rest.errors.BadRequestAlertException;
 import com.shaowei.food.web.rest.util.HeaderUtil;
 import com.shaowei.food.web.rest.util.PaginationUtil;
-import com.shaowei.food.web.rest.vm.ProviderAndAdminVM;
 
 import io.github.jhipster.web.util.ResponseUtil;
 
@@ -63,7 +60,7 @@ public class ProviderResource {
         if (providerDTO.getId() != null) {
             throw new BadRequestAlertException("A new provider cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        ProviderDTO result = providerService.save(providerDTO);
+        ProviderDTO result = providerService.create(providerDTO);
         return ResponseEntity.created(new URI("/api/providers/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -141,18 +138,18 @@ public class ProviderResource {
      * @return the ResponseEntity with status 201 (Created) and with body the new providerDTO, or with status 400 (Bad Request) if the provider has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @PostMapping("/providers-with-admin")
-    @PreAuthorize("hasRole(\"" + AuthoritiesConstants.PROVIDER_ADMINISTRATOR + "\")")
-    @Timed
-    public ResponseEntity<ProviderDTO> createProviderwithAdmin(@RequestBody ProviderAndAdminVM providerAndAdminVM) throws URISyntaxException {
-        log.debug("REST request to save Provider with administrator: {}", providerAndAdminVM);
-        if (providerAndAdminVM.getId() != null) {
-            throw new BadRequestAlertException("A new provider cannot already have an ID", ENTITY_NAME, "idexists");
-        }
-        ProviderDTO result = providerService.save(providerAndAdminVM, providerAndAdminVM.getAdministratorId());
-        return ResponseEntity.created(new URI("/api/providers/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
-            .body(result);
-    }
+//    @PostMapping("/providers-with-admin")
+//    @PreAuthorize("hasRole(\"" + AuthoritiesConstants.PROVIDER_ADMINISTRATOR + "\")")
+//    @Timed
+//    public ResponseEntity<ProviderDTO> createProviderwithAdmin(@RequestBody ProviderAndAdminVM providerAndAdminVM) throws URISyntaxException {
+//        log.debug("REST request to save Provider with administrator: {}", providerAndAdminVM);
+//        if (providerAndAdminVM.getId() != null) {
+//            throw new BadRequestAlertException("A new provider cannot already have an ID", ENTITY_NAME, "idexists");
+//        }
+//        ProviderDTO result = providerService.save(providerAndAdminVM, providerAndAdminVM.getAdministratorId());
+//        return ResponseEntity.created(new URI("/api/providers/" + result.getId()))
+//            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+//            .body(result);
+//    }
 
 }

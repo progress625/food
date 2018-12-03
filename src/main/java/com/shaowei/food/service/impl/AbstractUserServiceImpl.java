@@ -3,6 +3,7 @@ package com.shaowei.food.service.impl;
 import com.shaowei.food.service.AbstractUserService;
 import com.shaowei.food.domain.AbstractUser;
 import com.shaowei.food.repository.AbstractUserRepository;
+import com.shaowei.food.security.SecurityUtils;
 import com.shaowei.food.service.dto.AbstractUserDTO;
 import com.shaowei.food.service.mapper.AbstractUserMapper;
 import org.slf4j.Logger;
@@ -102,5 +103,10 @@ public class AbstractUserServiceImpl implements AbstractUserService {
 
         abstractUser = abstractUserRepository.save(abstractUser);
         return abstractUser;
+	}
+
+	@Override
+	public Optional<AbstractUser> getCurrentAbstractUser() {
+		return  SecurityUtils.getCurrentUserLogin().flatMap(abstractUserRepository::findByEmail);
 	}
 }

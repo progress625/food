@@ -45,5 +45,13 @@ public interface ProviderService {
     void delete(String id);
 
 	ProviderDTO save(ProviderDTO providerDTO, String adminId);
+	
+    /**
+     * Create a provider.
+     *
+     * @param providerDTO the entity to save
+     * @return the persisted entity
+     */
+    ProviderDTO create(ProviderDTO providerDTO);
 
 }
